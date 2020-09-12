@@ -1,20 +1,23 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
+const url =
+  "mongodb+srv://talha:#Talha@123@cluster0.irsba.mongodb.net/userTalha?retryWrites=true&w=majority";
 
 //config.db
 export default async (db) => {
   try {
     const conn = await mongoose.connect(
-      process.env.MONGO_URL, 
+      url,
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        useFindAndModify : false,
-        useCreateIndex : true
-      }, 
-      () => console.log('DB connected'));
+        useFindAndModify: false,
+        useCreateIndex: true,
+      },
+      () => console.log("DB connected")
+    );
     return conn;
   } catch (err) {
-    throw new Error('MongoDB connection err: ' + err);
+    throw new Error("MongoDB connection err: " + err);
   }
 };

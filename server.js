@@ -51,10 +51,11 @@ app.use((req, res, next) => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
+const port = process.env.PORT || 8000;
+// const port = 4444;
 
-app.listen(PORT, () => {
-  console.log(`App is listing on port${PORT}`);
+app.listen(port, () => {
+  console.log(`App is listing on port${port}`);
 });
 
 export default app;
