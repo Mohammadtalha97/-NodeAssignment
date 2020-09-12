@@ -234,6 +234,7 @@ export const forgotController = (req, res) => {
       var transport = nodemailer.createTransport({
         service: "gmail",
         auth: {
+          type: "OAuth2",
           user: "patel.glsica15@gmail.com",
           pass: "#SalamYaNabi@123",
         },
