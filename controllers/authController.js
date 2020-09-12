@@ -263,7 +263,7 @@ export const forgotController = (req, res) => {
             //send mail
             transport.sendMail(mailOptions, function (error, info) {
               if (error) {
-                res.json({ yo: "error" });
+                res.json({ error: "error" });
                 res.sendStatus(500);
                 return res
                   .status(400)
