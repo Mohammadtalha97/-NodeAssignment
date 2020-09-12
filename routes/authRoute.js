@@ -31,3 +31,5 @@ router.post("/password/forget", forgotPasswordValidator, forgotController);
 router.post("/password/reset", resetPasswordValidator, resetController);
 
 export default router;
+
+//talha
