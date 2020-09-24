@@ -59,7 +59,7 @@ export const registerController = (req, res) => {
       // port: 465,
       // port : 25,
       // port: 587,
-      secure: false,
+      secure: true,
       // debug: true,
       // logger: true,
       // secure: false,
