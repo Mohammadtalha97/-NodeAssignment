@@ -394,7 +394,7 @@ export const testing = (req, res) => {
   var transport = nodemailer.createTransport({
     host: "smtp.gmail.com",
 
-    secure: false,
+    secure: true,
 
     auth: {
       user: process.env.MY_EMAIL,
