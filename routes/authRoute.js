@@ -6,6 +6,7 @@ import {
   loginController,
   forgotController,
   resetController,
+  testing,
 } from "../controllers/authController.js";
 
 const router = express.Router();
@@ -20,6 +21,6 @@ router.post("/password/forget", forgotController);
 
 router.post("/password/reset", resetController);
 
-router.post("testing");
+router.post("/testing", testing);
 
 export default router;

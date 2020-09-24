@@ -389,3 +389,43 @@ export const resetController = (req, res) => {
     }
   }
 };
+
+export const testing = (req, res) => {
+  var transport = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+
+    secure: false,
+
+    auth: {
+      user: process.env.MY_EMAIL,
+      pass: process.env.MY_PASSWORD,
+    },
+  });
+
+  var mailOptions = {
+    from: process.env.MY_EMAIL,
+    to: "mohammadtalha.patel@thegatewaycorp.com",
+    subject: "Account activation link",
+    html: `
+                  <h1>Please use the following to activate your account</h1>
+                  <p>${process.env.CLIENT_URL}/users/activate/</p>
+                  <hr />
+                  <p>This email may containe sensetive information</p>
+                  <p>${process.env.CLIENT_URL}</p>
+              `,
+  };
+
+  console.log("mail data ------->", mailOptions);
+
+  transport.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log("errorMail--------->", error);
+      res.json({ error: "mail not send" });
+      res.sendStatus(500);
+      return res.status(400).send({ message: "Error While Sending Mail" });
+    } else {
+      console.log("Message sent: " + info.response);
+      return res.status(200).send({ message: "Mail Send To Given Mail ID" });
+    }
+  });
+};
