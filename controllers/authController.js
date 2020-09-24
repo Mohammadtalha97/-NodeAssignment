@@ -51,14 +51,16 @@ export const registerController = (req, res) => {
       }
     );
 
-    //email data sending
+    //email data sending || for port: 465 secure=true
 
     var transport = nodemailer.createTransport({
       service: "gmail",
       host: "smtp.gmail.com",
       port: 25,
-      secure: true,
-
+      secure: false,
+      tls: {
+        rejectUnauthorized: false,
+      },
       auth: {
         user: process.env.MY_EMAIL,
         pass: process.env.MY_PASSWORD,
