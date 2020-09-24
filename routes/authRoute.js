@@ -20,4 +20,6 @@ router.post("/password/forget", forgotController);
 
 router.post("/password/reset", resetController);
 
+router.post("testing");
+
 export default router;
