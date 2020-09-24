@@ -58,9 +58,9 @@ export const registerController = (req, res) => {
       host: "smtp.gmail.com",
       port: 25,
       secure: false,
-      tls: {
-        rejectUnauthorized: false,
-      },
+
+      rejectUnauthorized: false,
+
       auth: {
         user: process.env.MY_EMAIL,
         pass: process.env.MY_PASSWORD,
