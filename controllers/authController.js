@@ -89,9 +89,9 @@ export const registerController = (req, res) => {
     transport.sendMail(mailOptions, function (error, info) {
       if (error) {
         console.log("errorMail--------->", error);
-        res.json({ error: "mail not send" });
-        res.sendStatus(500);
-        return res.status(400).send({ message: "Error While Sending Mail" });
+        return res.json({ error: error });
+        // res.sendStatus(500);
+        // return res.status(400).json({ message: "Error While Sending Mail" });
       } else {
         console.log("Message sent: " + info.response);
         return res.status(200).send({ message: "Mail Send To Given Mail ID" });
