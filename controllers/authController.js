@@ -57,16 +57,7 @@ export const registerController = (req, res) => {
       service: "gmail",
       host: "smtp.gmail.com",
       port: 465,
-      logger: false,
-      newline: "windows",
-      sendmail: true,
-      // port : 25,
-      // port: 587,
       secure: true,
-      // debug: true,
-      // logger: true,
-      // secure: false,
-      // ignoreTLS: false,
 
       auth: {
         user: process.env.MY_EMAIL,
@@ -398,6 +389,15 @@ export const testing = (req, res) => {
     host: "smtp.gmail.com",
 
     secure: true,
+    // logger: false,
+    // newline: "windows",
+    // sendmail: true,
+    // port : 25,
+    // port: 587,
+    // debug: true,
+    // logger: true,
+    // secure: false,
+    // ignoreTLS: false,
 
     auth: {
       user: process.env.MY_EMAIL,
