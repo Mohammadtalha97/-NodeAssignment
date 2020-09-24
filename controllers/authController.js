@@ -54,12 +54,9 @@ export const registerController = (req, res) => {
     //email data sending || for port: 465 secure=true
 
     var transport = nodemailer.createTransport({
-      service: "gmail",
       host: "smtp.gmail.com",
-      port: 25,
-      secure: false,
-
-      rejectUnauthorized: false,
+      port: 587,
+      secure: true,
 
       auth: {
         user: process.env.MY_EMAIL,
