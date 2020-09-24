@@ -8,28 +8,16 @@ import {
   resetController,
 } from "../controllers/authController.js";
 
-//validation
-import {
-  validRegister,
-  validLogin,
-  forgotPasswordValidator,
-  resetPasswordValidator,
-} from "../helpers/valid.js";
-
-// import {registerController, } from '../controllers/authController.js';
-
 const router = express.Router();
 
-router.post("/register", validRegister, registerController);
+router.post("/register", registerController);
 
 router.post("/activation", activationController);
 
-router.post("/login", validLogin, loginController);
+router.post("/login", loginController);
 
-router.post("/password/forget", forgotPasswordValidator, forgotController);
+router.post("/password/forget", forgotController);
 
-router.post("/password/reset", resetPasswordValidator, resetController);
+router.post("/password/reset", resetController);
 
 export default router;
-
-//

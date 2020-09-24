@@ -7,7 +7,8 @@ const url =
 export default async (db) => {
   try {
     const conn = await mongoose.connect(
-      url,
+      // url,
+      process.env.MONGO_URL,
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,

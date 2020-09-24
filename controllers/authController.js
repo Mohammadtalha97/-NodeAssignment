@@ -1,37 +1,30 @@
 import User from "../models/authModel.js";
-import expressJwt from "express-jwt";
-// import _ from 'loadash';
-import pkgGoogle from "google-auth-library";
-import fetch from "node-fetch";
-// const _ = require("lodash");
+// import _, { result } from "lodash";
+// import _, { result } from "lodash";
+import bcrypt from "bcryptjs";
 import _ from "lodash";
-import pkgExpressValidator from "express-validator";
 import jwt from "jsonwebtoken";
-// import { } from '../models/authModel';
-// custom error handler to get useful error from database errors
 import errorHandler from "../helpers/dbErrorHandaling.js";
-
 import nodemailer from "nodemailer";
-// import { func } from "joi";
-
-const { OAuth2Client } = pkgGoogle;
-const { validationResult } = pkgExpressValidator;
+import {
+  RegistrationValidation,
+  LoginValidation,
+  ForgotPasswordValidaton,
+  ResetPasswordValidator,
+} from "../ValidateUsingJoi/validate.js";
+import e from "express";
 
 export const registerController = (req, res) => {
   const { name, email, password } = req.body;
 
   console.log("data are coming --------->", req.body);
-  const errors = validationResult(req);
 
-  //custome validation
+  const { error } = RegistrationValidation(req.body);
 
-  if (!errors.isEmpty()) {
-    console.log(" errors -->", errors);
-
-    const firstError = errors.array().map((error) => error.msg)[0];
-    return res.status(422).json({
-      error: firstError,
-    });
+  if (error) {
+    console.log("error");
+    let errorMessage = error.details[0].message;
+    return res.status(400).json({ error: errorMessage });
   } else {
     console.log("no errors");
     User.findOne({
@@ -61,15 +54,25 @@ export const registerController = (req, res) => {
     //email data sending
 
     var transport = nodemailer.createTransport({
-      service: "gmail",
+      // service: "gmail",
+      host: "smtp.gmail.com",
+      // port: 465,
+      // port : 25,
+      // port: 587,
+      secure: false,
+      // debug: true,
+      // logger: true,
+      // secure: false,
+      // ignoreTLS: false,
+
       auth: {
-        user: "patel.glsica15@gmail.com",
-        pass: "#SalamYaNabi@123",
+        user: process.env.MY_EMAIL,
+        pass: process.env.MY_PASSWORD,
       },
     });
 
     var mailOptions = {
-      from: "patel.glsica15@gmail.com",
+      from: process.env.MY_EMAIL,
       to: req.body.email,
       subject: "Account activation link",
       html: `
@@ -86,7 +89,7 @@ export const registerController = (req, res) => {
     transport.sendMail(mailOptions, function (error, info) {
       if (error) {
         console.log("errorMail--------->", error);
-        res.json({ yo: "error" });
+        res.json({ error: "mail not send" });
         res.sendStatus(500);
         return res.status(400).send({ message: "Error While Sending Mail" });
       } else {
@@ -98,13 +101,12 @@ export const registerController = (req, res) => {
 };
 
 //activation and save into database
-
-export const activationController = (req, res) => {
+export const activationController = async (req, res) => {
   console.log("auth called..........");
   // console.log("req.body --->", req.body)
   const { token } = req.body;
 
-  console.log("token", token);
+  console.log("token");
   if (token) {
     //verifing token
     jwt.verify(token, process.env.JWT_ACCOUNT_ACTIVATION, (err, decoded) => {
@@ -126,17 +128,31 @@ export const activationController = (req, res) => {
           hashed_password: password,
         });
 
-        user.save((err, user) => {
-          if (err) {
-            return res.status(401).json({
-              error: errorHandler(err),
-            });
-          } else {
-            return res.json({
-              success: true,
-              message: "Signup Success",
-            });
-          }
+        // let saltRounds = 10;
+
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(user.hashed_password, salt, (err, hash) => {
+            if (err) {
+              console.log("increpet_error-------->", err);
+              res.status(400);
+            } else {
+              user.hashed_password = hash;
+              user.save((err, user) => {
+                if (err) {
+                  console.log("err");
+                  return res.status(401).json({
+                    error: errorHandler(err),
+                  });
+                } else {
+                  console.log("success");
+                  return res.json({
+                    success: true,
+                    message: "Signup Success",
+                  });
+                }
+              });
+            }
+          });
         });
       }
     });
@@ -152,13 +168,9 @@ export const activationController = (req, res) => {
 export const loginController = (req, res) => {
   const { email, password } = req.body;
 
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    const firstError = errors.array().map((error) => error.msg)[0];
-    return res.status(422).json({
-      error: firstError,
-    });
+  const { error } = LoginValidation(req.body);
+  if (error) {
+    res.status(400).json({ error: error.details[0].message });
   } else {
     //check if user exist
     User.findOne({ email }).exec((err, user) => {
@@ -168,33 +180,39 @@ export const loginController = (req, res) => {
         });
       }
 
-      if (password !== user.hashed_password) {
-        return res.status(400).json({
-          error: "Email And Password Do Not Match",
-        });
-      }
+      bcrypt.compare(password, user.hashed_password, (err, result) => {
+        if (err) {
+          console.log("error", err);
+        } else {
+          if (!result) {
+            return res.status(400).json({
+              error: "Email And Password Do Not Match",
+            });
+          } else {
+            //Generate token
 
-      //Generate token
+            const token = jwt.sign(
+              {
+                _id: user._id,
+              },
+              process.env.JWT_SECRET,
+              {
+                expiresIn: "7d",
+              }
+            );
 
-      const token = jwt.sign(
-        {
-          _id: user._id,
-        },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "7d",
+            const { _id, name, email, role } = user;
+            return res.json({
+              token,
+              user: {
+                _id,
+                name,
+                email,
+                role,
+              },
+            });
+          }
         }
-      );
-
-      const { _id, name, email, role } = user;
-      return res.json({
-        token,
-        user: {
-          _id,
-          name,
-          email,
-          role,
-        },
       });
     });
   }
@@ -203,17 +221,16 @@ export const loginController = (req, res) => {
 //forgot_password
 export const forgotController = (req, res) => {
   console.log("inside forgot--------->");
-  const { email } = req.body;
-  const errors = validationResult(req);
 
-  if (!errors.isEmpty()) {
-    const firstError = errors.array().map((error) => error.msg)[0];
-    return res.status(422).json({
-      error: firstError,
-    });
+  const { error } = ForgotPasswordValidaton(req.body);
+
+  let { email } = req.body;
+  if (error) {
+    res.status(400).json({ error: error.details[0].message });
   } else {
+    console.log("working");
     //Find if user exists
-    User.findOne({ email }, (err, user) => {
+    User.findOne({ email }).exec((err, user) => {
       if (err || !user) {
         return res
           .status(400)
@@ -232,9 +249,10 @@ export const forgotController = (req, res) => {
 
       //Send email with this token
       var transport = nodemailer.createTransport({
-        service: "gmail",
+        // service: "gmail",
+        host: "smtp.gmail.com",
         auth: {
-          type: "OAuth2",
+          // type: "OAuth2",
           user: "patel.glsica15@gmail.com",
           pass: "#SalamYaNabi@123",
         },
@@ -287,16 +305,16 @@ export const forgotController = (req, res) => {
 export const resetController = (req, res) => {
   console.log("1");
   const { resetPasswordLink, newPassword } = req.body;
-  const errors = validationResult(req);
+  let newPasswordObj = {
+    newPassword: newPassword,
+  };
+  const { error } = ResetPasswordValidator(newPasswordObj);
 
-  if (!errors.isEmpty()) {
-    console.log("2");
-    const firstError = errors.array().map((error) => error.msg)[0];
-    return res.status(422).json({
-      error: firstError,
-    });
+  console.log("error", error);
+  if (error) {
+    res.status(400).json({ error: error.details[0].message });
   } else {
-    console.log("3");
+    console.log("3", resetPasswordLink);
     if (resetPasswordLink) {
       console.log("4");
 
@@ -325,34 +343,49 @@ export const resetController = (req, res) => {
                 resetPasswordLink: "",
               };
 
-              return user.updateOne(
-                {
-                  hashed_password: updatedFields.password,
-                },
-                (err, success) => {
+              bcrypt.genSalt(10, (err, salt) => {
+                bcrypt.hash(updatedFields.password, salt, (err, hash) => {
                   if (err) {
-                    return res.status(400).json({ error: errorHandler(err) });
+                    console.log("increpet_error-------->", err);
+                    res.status(400);
                   } else {
-                    user.save((err, result) => {
-                      if (err) {
-                        console.log("10");
-                        return res.status(400).json({
-                          error: "Error reseting user password",
-                        });
-                      } else {
-                        console.log("11");
-                        res.json({
-                          message: "Great! Now you can login with new password",
-                        });
+                    // updatedFields.password = hash;
+                    return user.updateOne(
+                      {
+                        hashed_password: hash,
+                      },
+                      (err, success) => {
+                        if (err) {
+                          return res
+                            .status(400)
+                            .json({ error: errorHandler(err) });
+                        } else {
+                          user.save((err, result) => {
+                            if (err) {
+                              console.log("10");
+                              return res.status(400).json({
+                                error: "Error reseting user password",
+                              });
+                            } else {
+                              console.log("11");
+                              res.json({
+                                message:
+                                  "Great! Now you can login with new password",
+                              });
+                            }
+                          });
+                        }
                       }
-                    });
+                    );
                   }
-                }
-              );
+                });
+              });
             }
           });
         }
       });
+    } else {
+      console.log("not inside 4");
     }
   }
 };
