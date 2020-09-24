@@ -54,7 +54,7 @@ export const registerController = (req, res) => {
     //email data sending
 
     var transport = nodemailer.createTransport({
-      // service: "gmail",
+      service: "gmail",
       host: "smtp.gmail.com",
       port: 465,
       logger: false,
