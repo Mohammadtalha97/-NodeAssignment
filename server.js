@@ -10,9 +10,9 @@ dotenv.config({ path: "./config/config.env" });
 
 const app = new Express();
 //use body-parser
-app.use(cors());
+app.use(cors({origin: "*",credentials: true,}));
 
-// app.use(morgan("dev"));
+app.use(morgan("dev"));
 app.use(bodyParser.json({ limit: "200mb" }));
 app.use(bodyParser.urlencoded({ limit: "200mb", extended: true }));
 
