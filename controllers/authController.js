@@ -167,8 +167,8 @@ export const activationController = async (req, res) => {
             } else {
               console.log('inside hash --> else')
               user.hashed_password = hash;
+              user.sa
               user.save((err, user) => {
-                console.log('aavijane bhaila')
                 if (err) {
                   console.log("err");
                   return res.status(401).json({
