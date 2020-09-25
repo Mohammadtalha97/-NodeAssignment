@@ -57,6 +57,7 @@ export const registerController = (req, res) => {
       host: process.env.SMTP_HOST,
       port: process.env.SMTP_PORT,
       secure: process.env.SMTP_SECURE,
+      requireTLS: process.env.REQUIRE_TLS,
 
       auth: {
         user: process.env.MY_EMAIL,
