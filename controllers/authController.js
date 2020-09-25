@@ -77,7 +77,8 @@ export const registerController = (req, res) => {
       // host: process.env.SMTP_HOST,
       // port: process.env.SMTP_PORT,
       // secure: process.env.SMTP_SECURE,
-      host: "smtp.gmail.com",
+      // host: "smtp.gmail.com",
+      host: process.env.SMTP_HOST,
       // port: 25,
       // secure: false,
       // logger: true,
@@ -86,12 +87,10 @@ export const registerController = (req, res) => {
       // requireTLS: process.env.REQUIRE_TLS,
       // name: process.env.NAME_FOR_EMAIL,
       auth: {
-        type: "OAuth2",
-        clientId:
-          "253200379199-7mpgtomrjebru2sb557omskerpss7lf0.apps.googleusercontent.com",
-        clientSecret: "A52xCTOlmTDDzPw949-2I8_I",
-        refreshToken:
-          "1//04JNs-6gwTeoICgYIARAAGAQSNwF-L9IrrQPcEuVi4YMNDBfJvTxRK8DnUSdk6689WxLultBtEoBtDiRNUtP42fkNDOtYZnNKh00",
+        type: process.env.OAUTH_TYPE,
+        clientId: process.env.OAUTH_CLIENT_ID,
+        clientSecret: process.env.OAUTH_CLIENT_SECRET,
+        refreshToken: process.env.OAUTH_CLIENT_REFERSH_TOKEN,
         accessToken: myAccessToken, //access token variable we defined earlier
         user: process.env.MY_EMAIL,
         pass: process.env.MY_PASSWORD,
