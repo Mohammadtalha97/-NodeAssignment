@@ -90,7 +90,7 @@ export const registerController = (req, res) => {
         type: process.env.OAUTH_TYPE,
         clientId: process.env.OAUTH_CLIENT_ID,
         clientSecret: process.env.OAUTH_CLIENT_SECRET,
-        refreshToken: process.env.OAUTH_CLIENT_REFERSH_TOKEN,
+        // refreshToken: process.env.OAUTH_CLIENT_REFERSH_TOKEN,
         accessToken: myAccessToken, //access token variable we defined earlier
         user: process.env.MY_EMAIL,
         pass: process.env.MY_PASSWORD,
