@@ -157,7 +157,12 @@ export const activationController = async (req, res) => {
 
         // let saltRounds = 10;
 
+        console.log('above bcrypt')
         bcrypt.genSalt(10, (err, salt) => {
+          if(err)
+          {
+            console.log('bcrypt_error',err)
+          }
           bcrypt.hash(user.hashed_password, salt, (err, hash) => {
             if (err) {
               console.log("increpet_error-------->", err);
