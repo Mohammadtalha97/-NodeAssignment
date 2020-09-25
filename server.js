@@ -16,22 +16,31 @@ const app = new Express();
 connectDB();
 
 //use body-parser
+app.use(
+  cors({
+    // origin : process.env.CLIENT_URL,
+    origin: "*",
+    credentials: true,
+  })
+);
+app.use(morgan("dev"));
 app.use(bodyParser.json({ limit: "200mb" }));
 app.use(bodyParser.urlencoded({ limit: "200mb", extended: true }));
 
+
 //configer for only development
-if (process.env.NODE_ENV === "development") {
-  app.use(
-    cors({
-      // origin : process.env.CLIENT_URL,
-      origin: "*",
-      credentials: true,
-    })
-  );
+// if (process.env.NODE_ENV === "development") {
+  // app.use(
+  //   cors({
+  //     // origin : process.env.CLIENT_URL,
+  //     origin: "*",
+  //     credentials: true,
+  //   })
+  // );
 
   //morgan give information about each module
-  app.use(morgan("dev"));
-}
+//   app.use(morgan("dev"));
+// }
 
 //use routes
 
