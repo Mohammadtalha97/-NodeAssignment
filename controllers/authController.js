@@ -159,9 +159,9 @@ export const activationController = async (req, res) => {
 
         console.log('above bcrypt')
         bcrypt.genSalt(10, (err, salt) => {
-          if(err)
+          if(!err)
           {
-            console.log('bcrypt_error',err)
+            console.log('haaan aagad vadh')
           }
           bcrypt.hash(user.hashed_password, salt, (err, hash) => {
             if (err) {
