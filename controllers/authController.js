@@ -14,7 +14,9 @@ import {
 } from "../ValidateUsingJoi/validate.js";
 import e from "express";
 
-import { google } from "googleapis";
+import pkg from "googleapis";
+
+const { google } = pkg;
 
 export const registerController = (req, res) => {
   const { name, email, password } = req.body;
@@ -32,7 +34,7 @@ export const registerController = (req, res) => {
       "1//04JNs-6gwTeoICgYIARAAGAQSNwF-L9IrrQPcEuVi4YMNDBfJvTxRK8DnUSdk6689WxLultBtEoBtDiRNUtP42fkNDOtYZnNKh00",
   });
 
-  const myAccessToken = oauth2Client.getAccessToken();
+  const myAccessToken = myOAuth2Client.getAccessToken();
 
   console.log("data are coming --------->", req.body);
 
@@ -71,10 +73,16 @@ export const registerController = (req, res) => {
     //email data sending || for port: 465 secure=true
 
     var transport = nodemailer.createTransport({
-      service: "gmail",
+      // service: "gmail",
       // host: process.env.SMTP_HOST,
       // port: process.env.SMTP_PORT,
       // secure: process.env.SMTP_SECURE,
+      host: "smtp.gmail.com",
+      // port: 25,
+      // secure: false,
+      // logger: true,
+      // debug: true,
+      // ignoreTLS: true, // add this
       // requireTLS: process.env.REQUIRE_TLS,
       // name: process.env.NAME_FOR_EMAIL,
       auth: {
