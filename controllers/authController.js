@@ -14,8 +14,25 @@ import {
 } from "../ValidateUsingJoi/validate.js";
 import e from "express";
 
+import { google } from "googleapis";
+
 export const registerController = (req, res) => {
   const { name, email, password } = req.body;
+  //OAuth
+  const OAuth2 = google.auth.OAuth2;
+
+  const myOAuth2Client = new OAuth2(
+    "253200379199-7mpgtomrjebru2sb557omskerpss7lf0.apps.googleusercontent.com",
+    "A52xCTOlmTDDzPw949-2I8_I",
+    "https://developers.google.com/oauthplayground"
+  );
+
+  myOAuth2Client.setCredentials({
+    refresh_token:
+      "1//04JNs-6gwTeoICgYIARAAGAQSNwF-L9IrrQPcEuVi4YMNDBfJvTxRK8DnUSdk6689WxLultBtEoBtDiRNUtP42fkNDOtYZnNKh00",
+  });
+
+  const myAccessToken = oauth2Client.getAccessToken();
 
   console.log("data are coming --------->", req.body);
 
@@ -54,12 +71,20 @@ export const registerController = (req, res) => {
     //email data sending || for port: 465 secure=true
 
     var transport = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
-      secure: process.env.SMTP_SECURE,
+      service: "gmail",
+      // host: process.env.SMTP_HOST,
+      // port: process.env.SMTP_PORT,
+      // secure: process.env.SMTP_SECURE,
       // requireTLS: process.env.REQUIRE_TLS,
-      name: process.env.NAME_FOR_EMAIL,
+      // name: process.env.NAME_FOR_EMAIL,
       auth: {
+        type: "OAuth2",
+        clientId:
+          "253200379199-7mpgtomrjebru2sb557omskerpss7lf0.apps.googleusercontent.com",
+        clientSecret: "A52xCTOlmTDDzPw949-2I8_I",
+        refreshToken:
+          "1//04JNs-6gwTeoICgYIARAAGAQSNwF-L9IrrQPcEuVi4YMNDBfJvTxRK8DnUSdk6689WxLultBtEoBtDiRNUtP42fkNDOtYZnNKh00",
+        accessToken: myAccessToken, //access token variable we defined earlier
         user: process.env.MY_EMAIL,
         pass: process.env.MY_PASSWORD,
       },
@@ -87,6 +112,7 @@ export const registerController = (req, res) => {
         // res.sendStatus(500);
         // return res.status(400).json({ message: "Error While Sending Mail" });
       } else {
+        // transport.close();
         console.log("Message sent: " + info.response);
         return res.status(200).send({ message: "Mail Send To Given Mail ID" });
       }

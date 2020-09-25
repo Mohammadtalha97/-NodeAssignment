@@ -22,6 +22,7 @@
     "express-jwt": "^6.0.0",
     "express-validator": "^6.6.1",
     "google-auth-library": "^6.0.6",
+    "googleapis": "^60.0.1",
     "joi": "^13.1.0",
     "jsonwebtoken": "^8.5.1",
     "loadash": "^1.0.0",
