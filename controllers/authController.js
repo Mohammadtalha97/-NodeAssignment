@@ -473,29 +473,35 @@ export const testing = (req, res) => {
 
 //middleware for sending space to client every 15 second
 export const extendTimeoutMiddleware = (req, res, next) => {
+  console.log("inside middleware");
   const space = " ";
   let isFinished = false;
   let isDataSent = false;
 
   // Only extend the timeout for API requests
   if (!req.url.includes("/api")) {
+    console.log("inside /api");
     next();
     return;
   }
 
   res.once("finish", () => {
+    console.log("inside finish");
     isFinished = true;
   });
 
   res.once("end", () => {
+    console.log("inside end");
     isFinished = true;
   });
 
   res.once("close", () => {
+    console.log("inside close");
     isFinished = true;
   });
 
   res.on("data", (data) => {
+    console.log("inside data");
     // Look for something other than our blank space to indicate that real
     // data is now being sent back to the client.
     if (data !== space) {
@@ -505,10 +511,13 @@ export const extendTimeoutMiddleware = (req, res, next) => {
 
   const waitAndSend = () => {
     setTimeout(() => {
+      console.log("inside settimeout");
       // If the response hasn't finished and hasn't sent any data back....
       if (!isFinished && !isDataSent) {
+        console.log("inside settimeout if");
         // Need to write the status code/headers if they haven't been sent yet.
         if (!res.headersSent) {
+          console.log("inside settimeout if-if");
           res.writeHead(202);
         }
 
@@ -520,6 +529,7 @@ export const extendTimeoutMiddleware = (req, res, next) => {
     }, 15000);
   };
 
+  console.log("last");
   waitAndSend();
   next();
 };
