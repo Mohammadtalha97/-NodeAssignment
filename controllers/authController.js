@@ -487,6 +487,9 @@ export const extendTimeoutMiddleware = (req, res, next) => {
   //   return;
   // }
 
+  // console.log("request-->", req);
+  console.log("response --->", res);
+
   res.once("finish", () => {
     console.log("inside finish");
     isFinished = true;
