@@ -175,15 +175,14 @@ export const activationController = async (req, res) => {
                   return res.status(401).json({
                     error: errorHandler(err),
                   });
-                } else {
-                  console.log("success");
-
-                  return res.json({
-                    success: true,
-                    message: "Signup Success",
-                  });
-                  // res.end();
                 }
+                console.log("success");
+
+                return res.json({
+                  success: true,
+                  message: "Signup Success",
+                });
+                // res.end();
               });
             }
           });
@@ -480,14 +479,6 @@ export const extendTimeoutMiddleware = (req, res, next) => {
   let isFinished = false;
   let isDataSent = false;
 
-  // Only extend the timeout for API requests
-  // if (!req.url.includes("/api")) {
-  //   console.log("inside /api");
-  //   next();
-  //   return;
-  // }
-
-  // console.log("request-->", req);
   console.log("response sent --->", res.headersSent);
 
   res.once("finish", () => {
