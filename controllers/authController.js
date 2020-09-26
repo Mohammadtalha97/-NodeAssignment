@@ -157,18 +157,19 @@ export const activationController = async (req, res) => {
 
         // let saltRounds = 10;
 
-        console.log('above bcrypt')
+        console.log("above bcrypt");
         bcrypt.genSalt(10, (err, salt) => {
-         
           bcrypt.hash(user.hashed_password, salt, (err, hash) => {
             if (err) {
               console.log("increpet_error-------->", err);
               res.status(400);
             } else {
-              console.log('inside hash --> else')
+              console.log("inside hash --> else");
               user.hashed_password = hash;
-              user.sa
+
+              console.log("user_data-------->", user);
               user.save((err, user) => {
+                console.log("inside save method--->");
                 if (err) {
                   console.log("err");
                   return res.status(401).json({
