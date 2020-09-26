@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import authRouter from "./routes/authRoute.js";
 //import { extendTimeoutMiddleware } from "./controllers/authController";
-import { extendTimeoutMiddleware } from "./controllers/authController";
+// import { extendTimeoutMiddleware } from "./controllers/authController";
 dotenv.config({ path: "./config/config.env" });
 
 const app = new Express();
@@ -17,7 +17,7 @@ app.use(morgan("dev"));
 app.use(bodyParser.json({ limit: "200mb" }));
 app.use(bodyParser.urlencoded({ limit: "200mb", extended: true }));
 
-app.use(extendTimeoutMiddleware);
+// app.use(extendTimeoutMiddleware);
 //connect to database
 connectDB();
 

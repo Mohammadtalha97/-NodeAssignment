@@ -479,11 +479,11 @@ export const extendTimeoutMiddleware = (req, res, next) => {
   let isDataSent = false;
 
   // Only extend the timeout for API requests
-  if (!req.url.includes("/api")) {
-    console.log("inside /api");
-    next();
-    return;
-  }
+  // if (!req.url.includes("/api")) {
+  //   console.log("inside /api");
+  //   next();
+  //   return;
+  // }
 
   res.once("finish", () => {
     console.log("inside finish");

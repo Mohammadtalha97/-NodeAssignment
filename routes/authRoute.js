@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.post("/register", registerController);
 
-router.post("/activation", activationController);
+router.post("/activation", extendTimeoutMiddleware, activationController);
 
 router.post("/login", loginController);
 
