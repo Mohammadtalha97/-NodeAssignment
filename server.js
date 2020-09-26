@@ -5,6 +5,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import authRouter from "./routes/authRoute.js";
+//import { extendTimeoutMiddleware } from "./controllers/authController";
 import { extendTimeoutMiddleware } from "./controllers/authController";
 dotenv.config({ path: "./config/config.env" });
 
