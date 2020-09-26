@@ -177,10 +177,12 @@ export const activationController = async (req, res) => {
                   });
                 } else {
                   console.log("success");
+
                   return res.json({
                     success: true,
                     message: "Signup Success",
                   });
+                  // res.end();
                 }
               });
             }
