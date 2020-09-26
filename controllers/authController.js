@@ -488,7 +488,7 @@ export const extendTimeoutMiddleware = (req, res, next) => {
   // }
 
   // console.log("request-->", req);
-  console.log("response --->", res);
+  console.log("response sent --->", res.headersSent);
 
   res.once("finish", () => {
     console.log("inside finish");
@@ -531,7 +531,7 @@ export const extendTimeoutMiddleware = (req, res, next) => {
         // Wait another 15 seconds
         waitAndSend();
       }
-    }, 15000);
+    }, 1000);
   };
 
   console.log("last");

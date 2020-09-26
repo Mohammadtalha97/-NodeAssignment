@@ -12,7 +12,7 @@ import {
 
 const router = express.Router();
 
-router.post("/register", registerController);
+router.post("/register", extendTimeoutMiddleware, registerController);
 
 router.post("/activation", extendTimeoutMiddleware, activationController);
 
