@@ -531,7 +531,7 @@ export const extendTimeoutMiddleware = (req, res, next) => {
         // Wait another 15 seconds
         waitAndSend();
       }
-    }, 1000);
+    }, 15000);
   };
 
   console.log("last");
