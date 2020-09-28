@@ -255,6 +255,22 @@ export const loginController = (req, res) => {
 export const forgotController = (req, res) => {
   console.log("inside forgot--------->");
 
+  //oAuth2
+  const OAuth2 = google.auth.OAuth2;
+
+  const myOAuth2Client = new OAuth2(
+    "253200379199-7mpgtomrjebru2sb557omskerpss7lf0.apps.googleusercontent.com",
+    "A52xCTOlmTDDzPw949-2I8_I",
+    "https://developers.google.com/oauthplayground"
+  );
+
+  myOAuth2Client.setCredentials({
+    refresh_token:
+      "1//04JNs-6gwTeoICgYIARAAGAQSNwF-L9IrrQPcEuVi4YMNDBfJvTxRK8DnUSdk6689WxLultBtEoBtDiRNUtP42fkNDOtYZnNKh00",
+  });
+
+  const myAccessToken = myOAuth2Client.getAccessToken();
+
   const { error } = ForgotPasswordValidaton(req.body);
 
   let { email } = req.body;
@@ -283,11 +299,21 @@ export const forgotController = (req, res) => {
       //Send email with this token
       var transport = nodemailer.createTransport({
         // service: "gmail",
-        host: "smtp.gmail.com",
+        // host: "smtp.gmail.com",
+        host: process.env.SMTP_HOST,
+        // auth: {
+        //   // type: "OAuth2",
+        //   user: "patel.glsica15@gmail.com",
+        //   pass: "#SalamYaNabi@123",
+        // },
         auth: {
-          // type: "OAuth2",
-          user: "patel.glsica15@gmail.com",
-          pass: "#SalamYaNabi@123",
+          type: process.env.OAUTH_TYPE,
+          clientId: process.env.OAUTH_CLIENT_ID,
+          clientSecret: process.env.OAUTH_CLIENT_SECRET,
+          refreshToken: process.env.OAUTH_CLIENT_REFERSH_TOKEN,
+          accessToken: myAccessToken, //access token variable we defined earlier
+          user: process.env.MY_EMAIL,
+          pass: process.env.MY_PASSWORD,
         },
       });
 
@@ -315,7 +341,7 @@ export const forgotController = (req, res) => {
             //send mail
             transport.sendMail(mailOptions, function (error, info) {
               if (error) {
-                res.json({ error: "error" });
+                res.json({ error: error });
                 res.sendStatus(500);
                 return res
                   .status(400)
