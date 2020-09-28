@@ -103,10 +103,10 @@ export const registerController = (req, res) => {
       subject: "Account activation link",
       html: `
                     <h1>Please use the following to activate your account</h1>
-                    <p>${process.env.CLIENT_URL}/users/activate/${token}</p>
+                    <p>${process.env.HOSTED_URL}/users/activate/${token}</p>
                     <hr />
                     <p>This email may containe sensetive information</p>
-                    <p>${process.env.CLIENT_URL}</p>
+                    <p>${process.env.HOSTED_URL}</p>
                 `,
     };
 
@@ -323,10 +323,10 @@ export const forgotController = (req, res) => {
         subject: "Password Reset link",
         html: `
                       <h1>Please use the following to reset your password</h1>
-                      <p>${process.env.CLIENT_URL}/users/password/reset/${token}</p>
+                      <p>${process.env.HOSTED_URL}/users/password/reset/${token}</p>
                       <hr />
                       <p>This email may containe sensetive information</p>
-                      <p>${process.env.CLIENT_URL}</p>
+                      <p>${process.env.HOSTED_URL}</p>
                   `,
       };
 
